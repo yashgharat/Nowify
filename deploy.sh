@@ -14,6 +14,6 @@ git add .
 git commit -m 'deploy'
 
 # if you are deploying to https://<USERNAME>.github.io/<REPO>
-git push -f git@github.com:yashgharat/Nowify.git main:gh-pages
+git push -f git@github.com:yashgharat/rpi_spotify.git master:gh-pages
 
 cd -
