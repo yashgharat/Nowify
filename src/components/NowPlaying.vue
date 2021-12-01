@@ -8,17 +8,19 @@
       <b-container>
         <div
           v-if="player.context != 'null'"
-          class="now-playing__context"
-          :class="getContextObject()"
+          class="now-playing__context has-context"
         >
+          <b-row class="justify-content-md-center text-center">
+            <img :src="getContextObject().url" />
+          </b-row>
           <b-row class="justify-content-md-center">
             <h1
-            class="text-center"
-            v-text="playerResponse.context.type"
-          ></h1>
+              class="text-center"
+              v-text="getContextObject().contextName"
+            ></h1>
           </b-row>
-          <b-row class="justify-content-md-center"></b-row>
         </div>
+        <div v-else class="now-playing__context null-context"></div>
         <b-row class="justify-content-md-center">
           <div class="now-playing__cover">
             <img
@@ -68,7 +70,8 @@ export default {
       playerResponse: {},
       playerData: this.getEmptyPlayer(),
       colourPalette: '',
-      swatches: []
+      swatches: [],
+      spotifyCode: {}
     }
   },
 
@@ -152,17 +155,6 @@ export default {
       const playerClass = this.player.playing ? 'active' : 'idle'
       return `now-playing--${playerClass}`
     },
-
-     /**
-     * Get the Now Playing element class.
-     * @return {String}
-     */
-    getContextObject() {
-      console.log(this.playerResponse.context);
-      if(this.playerResponse.context == null) return;
-      else return this.playerResponse.context.type;
-    },
-
     /**
      * Get the colour palette from the album cover.
      */
@@ -226,6 +218,40 @@ export default {
     },
 
     /**
+     * Construct the context of Now Playing
+     * @return {Object}
+     */
+    getContextObject() {
+      var context = this.playerResponse.context.type
+      let contextName = ''
+      let url = ''
+
+      if (context === 'album') {
+        this.spotifyCode.url = this.getCodeUrl(this.player.trackAlbum.uri)
+        this.spotifyCode.contextName = this.player.trackAlbum.title
+      } else if (context === 'artist') {
+        this.spotifyCode.url = this.getCodeUrl(this.player.artistUri)
+        this.spotifyCode.contextName = this.player.trackArtists[0]
+      }
+
+      url = this.spotifyCode.url
+      contextName = this.spotifyCode.contextName
+      return { contextName, url }
+    },
+
+    /**
+     * Construct the Spotify Code
+     * @return {String}
+     */
+    getCodeUrl(uri) {
+      if (!uri) return
+      const background = this.colourPalette.background.slice(1)
+      const baseURL = 'https://scannables.scdn.co/uri/plain/png/'
+      if (!background) return
+      return `${baseURL}${background}/white/300/${uri}`
+    },
+
+    /**
      * Handle newly updated Spotify Tracks.
      */
     handleNowPlaying() {
@@ -263,11 +289,13 @@ export default {
         trackArtists: this.playerResponse.item.artists.map(
           artist => artist.name
         ),
+        artistUri: this.playerResponse.item.artists[0].uri,
         trackTitle: this.playerResponse.item.name,
         trackId: this.playerResponse.item.id,
         trackAlbum: {
           title: this.playerResponse.item.album.name,
-          image: this.playerResponse.item.album.images[0].url
+          image: this.playerResponse.item.album.images[0].url,
+          uri: this.playerResponse.item.uri
         }
       }
     },
