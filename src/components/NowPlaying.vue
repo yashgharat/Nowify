@@ -71,7 +71,8 @@ export default {
       playerData: this.getEmptyPlayer(),
       colourPalette: '',
       swatches: [],
-      spotifyCode: {}
+      spotifyCode: {},
+      currentPlaylist: {}
     }
   },
 
@@ -155,6 +156,92 @@ export default {
       const playerClass = this.player.playing ? 'active' : 'idle'
       return `now-playing--${playerClass}`
     },
+
+    /**
+     * Construct the context of Now Playing
+     * @return {Object}
+     */
+    getContextObject() {
+      var context = this.playerResponse.context.type
+      let contextName = ''
+      let url = ''
+
+      if (context === 'album') {
+        this.spotifyCode.url = this.getCodeUrl(this.player.trackAlbum.uri)
+        this.spotifyCode.contextName = this.player.trackAlbum.title
+      } else if (context === 'artist') {
+        this.spotifyCode.url = this.getCodeUrl(this.player.artistUri)
+        this.spotifyCode.contextName = this.player.trackArtists[0]
+      } else if (context === 'playlist') {
+        this.spotifyCode.url = this.getCodeUrl(this.playerResponse.context.uri)
+        this.getPlaylistName(this.playerResponse.context.href).then(() => {
+          this.spotifyCode.contextName = this.currentPlaylist.name
+        })
+      }
+
+      url = this.spotifyCode.url
+      contextName = this.spotifyCode.contextName
+      return { contextName, url }
+    },
+
+    /**
+     * Construct the Spotify Code
+     * @return {String}
+     */
+    getCodeUrl(uri) {
+      const baseURL = 'https://scannables.scdn.co/uri/plain/svg/'
+      if (!uri) return
+      let background = this.colourPalette.background
+      if (!background) return
+      else background = background.slice(1)
+
+      let textHex = this.colourPalette.text
+      if (!textHex) return
+      
+      let colorStr = (textHex === '#000') ? 'black' : 'white'
+
+      return `${baseURL}${background}/${colorStr}/400/${uri}`
+    },
+
+    /**
+     * get Playlist name
+     * @return {String}
+     */
+    async getPlaylistName(url) {
+      let data = {}
+      try {
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${this.auth.accessToken}`
+          }
+        })
+
+        /**
+         * Fetch error.
+         */
+        if (!response.ok) {
+          throw new Error(`An error has occured: ${response.status}`)
+        }
+
+        /**
+         * Spotify returns a 204 when no current device session is found.
+         * The connection was successful but there's no content to return.
+         */
+        if (response.status === 204) {
+          this.currentPlaylist.name = ''
+          return
+        }
+
+        data = await response.json()
+        this.currentPlaylist.name = data.name
+        return
+      } catch (error) {
+        this.handleExpiredToken()
+
+        console.log(error)
+      }
+    },
+
     /**
      * Get the colour palette from the album cover.
      */
@@ -215,40 +302,6 @@ export default {
         '--colour-background-now-playing',
         this.colourPalette.background
       )
-    },
-
-    /**
-     * Construct the context of Now Playing
-     * @return {Object}
-     */
-    getContextObject() {
-      var context = this.playerResponse.context.type
-      let contextName = ''
-      let url = ''
-
-      if (context === 'album') {
-        this.spotifyCode.url = this.getCodeUrl(this.player.trackAlbum.uri)
-        this.spotifyCode.contextName = this.player.trackAlbum.title
-      } else if (context === 'artist') {
-        this.spotifyCode.url = this.getCodeUrl(this.player.artistUri)
-        this.spotifyCode.contextName = this.player.trackArtists[0]
-      }
-
-      url = this.spotifyCode.url
-      contextName = this.spotifyCode.contextName
-      return { contextName, url }
-    },
-
-    /**
-     * Construct the Spotify Code
-     * @return {String}
-     */
-    getCodeUrl(uri) {
-      if (!uri) return
-      const background = this.colourPalette.background.slice(1)
-      const baseURL = 'https://scannables.scdn.co/uri/plain/png/'
-      if (!background) return
-      return `${baseURL}${background}/white/300/${uri}`
     },
 
     /**
