@@ -5,17 +5,42 @@
       class="now-playing"
       :class="getNowPlayingClass()"
     >
-      <div class="now-playing__cover">
-        <img
-          :src="player.trackAlbum.image"
-          :alt="player.trackTitle"
-          class="now-playing__image"
-        />
-      </div>
-      <div class="now-playing__details">
-        <h1 class="now-playing__track" v-text="player.trackTitle"></h1>
-        <h2 class="now-playing__artists" v-text="getTrackArtists"></h2>
-      </div>
+      <b-container>
+        <div
+          v-if="player.context != 'null'"
+          class="now-playing__context"
+          :class="getContextObject()"
+        >
+          <b-row class="justify-content-md-center">
+            <h1
+            class="text-center"
+            v-text="playerResponse.context.type"
+          ></h1>
+          </b-row>
+          <b-row class="justify-content-md-center"></b-row>
+        </div>
+        <b-row class="justify-content-md-center">
+          <div class="now-playing__cover">
+            <img
+              :src="player.trackAlbum.image"
+              :alt="player.trackTitle"
+              class="now-playing__image"
+            />
+          </div>
+        </b-row>
+        <b-row class="justify-content-md-center">
+          <h1
+            class="now-playing__details now-playing__track text-center"
+            v-text="player.trackTitle"
+          ></h1>
+        </b-row>
+        <b-row class="justify-content-md-center">
+          <h2
+            class="now-playing__details now-playing__artists text-center"
+            v-text="getTrackArtists"
+          ></h2>
+        </b-row>
+      </b-container>
     </div>
     <div v-else class="now-playing" :class="getNowPlayingClass()">
       <h1 class="now-playing__idle-heading">No music is playing 😔</h1>
@@ -126,6 +151,16 @@ export default {
     getNowPlayingClass() {
       const playerClass = this.player.playing ? 'active' : 'idle'
       return `now-playing--${playerClass}`
+    },
+
+     /**
+     * Get the Now Playing element class.
+     * @return {String}
+     */
+    getContextObject() {
+      console.log(this.playerResponse.context);
+      if(this.playerResponse.context == null) return;
+      else return this.playerResponse.context.type;
     },
 
     /**
