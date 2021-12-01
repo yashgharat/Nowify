@@ -7,7 +7,7 @@
     >
       <b-container>
         <div
-          v-if="player.context != 'null'"
+          v-if="this.playerResponse.context"
           class="now-playing__context has-context"
         >
           <b-row class="justify-content-md-center text-center">
@@ -20,7 +20,11 @@
             ></h1>
           </b-row>
         </div>
-        <div v-else class="now-playing__context null-context"></div>
+        <div v-else class="now-playing__context null-context">
+          <b-row class="justify-content-md-center text-center">
+            <img :src="getCodeUrl(player.trackUri)" />
+          </b-row>
+        </div>
         <b-row class="justify-content-md-center">
           <div class="now-playing__cover">
             <img
@@ -197,10 +201,10 @@ export default {
 
       let textHex = this.colourPalette.text
       if (!textHex) return
-      
-      let colorStr = (textHex === '#000') ? 'black' : 'white'
 
-      return `${baseURL}${background}/${colorStr}/400/${uri}`
+      let colorStr = textHex === '#000' ? 'black' : 'white'
+
+      return `${baseURL}${background}/${colorStr}/300/${uri}`
     },
 
     /**
@@ -208,7 +212,7 @@ export default {
      * @return {String}
      */
     async getPlaylistName(url) {
-      let data = {}
+      let m = {}
       try {
         const response = await fetch(url, {
           headers: {
@@ -232,8 +236,9 @@ export default {
           return
         }
 
-        data = await response.json()
-        this.currentPlaylist.name = data.name
+        m = await response.json()
+        this.currentPlaylist.name = m.name
+        console.log(m)
         return
       } catch (error) {
         this.handleExpiredToken()
@@ -343,6 +348,7 @@ export default {
           artist => artist.name
         ),
         artistUri: this.playerResponse.item.artists[0].uri,
+        trackUri: this.playerResponse.item.uri,
         trackTitle: this.playerResponse.item.name,
         trackId: this.playerResponse.item.id,
         trackAlbum: {
