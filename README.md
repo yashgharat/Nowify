@@ -16,4 +16,4 @@ Preview:
 
 Nowify3.0 needs a webserver to run. The quickest way to get up and running is to use a Jamstack platform like Netlify or GitHub Pages.
 
-To get it up and running, follow the instructions from [@jonashcroft](https://github.com/jonashcroft) [here](README_original.md)
+To get it up and running, follow the instructions from [@jonashcroft](https://github.com/jonashcroft) located [here](README_original.md)
