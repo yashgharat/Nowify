@@ -31,7 +31,7 @@
               </b-row>
             </div>
             <div v-else class="now-playing__context null-context">
-              <b-row>
+              <b-row class="pb-5">
                 <img class="mb-5" :src="getCodeUrl(player.trackUri)" />
               </b-row>
             </div>
