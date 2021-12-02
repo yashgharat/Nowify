@@ -37,16 +37,15 @@
 
   &__details {
     text-align: center;
+    padding: 4px;
   }
 
   &__track {
     font-weight: var(--font-weight-heading);
-    padding-bottom: 0;
   }
 
   &__artists {
     opacity: 0.8;
-    padding: 2px;
   }
 
   &--active {
@@ -64,10 +63,11 @@
     flex-flow: row nowrap;
     padding: 10%;
 
-    &__cover {
-      width: 50%;
-      max-width: 495px;
-    }
+    // &__cover,
+    // &__details {
+    //   width: 50%;
+    //   max-width: 495px;
+    // }
 
     &__details {
       text-align: left;

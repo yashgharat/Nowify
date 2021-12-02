@@ -25,26 +25,32 @@
             <img :src="getCodeUrl(player.trackUri)" />
           </b-row>
         </div>
-        <b-row class="justify-content-md-center">
-          <div class="now-playing__cover">
-            <img
-              :src="player.trackAlbum.image"
-              :alt="player.trackTitle"
-              class="now-playing__image"
-            />
-          </div>
-        </b-row>
-        <b-row class="justify-content-md-center">
-          <h1
-            class="now-playing__details now-playing__track text-center"
-            v-text="player.trackTitle"
-          ></h1>
-        </b-row>
-        <b-row class="justify-content-md-center">
-          <h2
-            class="now-playing__details now-playing__artists text-center"
-            v-text="getTrackArtists"
-          ></h2>
+        <b-row>
+          <b-col>
+            <div class="now-playing__cover">
+              <img
+                :src="player.trackAlbum.image"
+                :alt="player.trackTitle"
+                class="now-playing__image"
+              />
+            </div>
+          </b-col>
+          <b-col class="d-flex align-items-center">
+            <b-container>
+              <b-row class="">
+                <h1
+                  class="now-playing__details now-playing__track"
+                  v-text="player.trackTitle"
+                ></h1>
+              </b-row>
+              <b-row class="">
+                <h2
+                  class="now-playing__details now-playing__artists"
+                  v-text="getTrackArtists"
+                ></h2>
+              </b-row>
+            </b-container>
+          </b-col>
         </b-row>
       </b-container>
     </div>
@@ -204,7 +210,7 @@ export default {
 
       let colorStr = textHex === '#000' ? 'black' : 'white'
 
-      return `${baseURL}${background}/${colorStr}/300/${uri}`
+      return `${baseURL}${background}/${colorStr}/400/${uri}`
     },
 
     /**
