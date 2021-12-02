@@ -6,7 +6,7 @@ The [original Nowify](https://github.com/jonashcroft/Nowify) was made by user [@
 
 Nowify allowed a user to authenticate for the Spotify api and displayed the the current track artist, cover, and a matching vibrant background color. It didn't track any data and was fortunately open source. 
 
-I am working on a similar project (More to come later) but wanted a bit more out of it. So now it also displays the context from which you are playing and a [Spotify Code](spotifycodes.com) to let others know where to find it. Be it a playlist, album, artist, or just the song, they can "Scan with Spotify" to find it in the app easily.
+I am working on a similar project (More to come later) but wanted a bit more out of it. So now it also displays the context from which you are playing and a [Spotify Code](https://www.spotifycodes.com) to let others know where to find it. Be it a playlist, album, artist, or just the song, they can "Scan with Spotify" to find it in the app easily.
 
 
 Preview:
