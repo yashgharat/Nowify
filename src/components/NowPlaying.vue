@@ -5,52 +5,48 @@
       class="now-playing"
       :class="getNowPlayingClass()"
     >
-      <b-container>
-        <div
-          v-if="this.playerResponse.context"
-          class="now-playing__context has-context"
-        >
-          <b-row class="justify-content-md-center text-center">
-            <img class="now-playing__code" :src="getContextObject().url" />
-          </b-row>
-          <b-row class="justify-content-md-center">
-            <h3
-              class="now-playing__context-name text-center"
-              v-text="getContextObject().contextName"
-            ></h3>
-          </b-row>
-        </div>
-        <div v-else class="now-playing__context null-context">
-          <b-row class="justify-content-md-center text-center">
-            <img :src="getCodeUrl(player.trackUri)" />
-          </b-row>
-        </div>
+      <b-container fluid>
         <b-row>
-          <b-col>
-            <div class="now-playing__cover">
+          <b-col
+            ><div class="now-playing__cover">
               <img
                 :src="player.trackAlbum.image"
                 :alt="player.trackTitle"
                 class="now-playing__image"
-              />
+              /></div
+          ></b-col>
+          <b-col
+            ><div
+              v-if="this.playerResponse.context"
+              class="now-playing__context has-context"
+            >
+              <b-row class="">
+                <img class="now-playing__code" :src="getContextObject().url" />
+              </b-row>
+              <b-row>
+                <h3
+                  class="mb-5 now-playing__context-name"
+                  v-text="getContextObject().contextName.toLowerCase()"
+                ></h3>
+              </b-row>
             </div>
-          </b-col>
-          <b-col class="d-flex align-items-center">
-            <b-container>
-              <b-row class="">
-                <h1
-                  class="now-playing__details now-playing__track"
-                  v-text="player.trackTitle"
-                ></h1>
+            <div v-else class="now-playing__context null-context">
+              <b-row>
+                <img class="mb-5" :src="getCodeUrl(player.trackUri)" />
               </b-row>
-              <b-row class="">
-                <h2
-                  class="now-playing__details now-playing__artists"
-                  v-text="getTrackArtists"
-                ></h2>
-              </b-row>
-            </b-container>
-          </b-col>
+            </div>
+            <b-row class="">
+              <h1
+                class="now-playing__details now-playing__track mt-4"
+                v-text="player.trackTitle"
+              ></h1>
+            </b-row>
+            <b-row class="">
+              <h2
+                class="now-playing__details now-playing__artists"
+                v-text="getTrackArtists"
+              ></h2> </b-row
+          ></b-col>
         </b-row>
       </b-container>
     </div>
@@ -199,7 +195,7 @@ export default {
      * @return {String}
      */
     getCodeUrl(uri) {
-      const baseURL = 'https://scannables.scdn.co/uri/plain/svg/'
+      const baseURL = 'https://scannables.scdn.co/uri/plain/png/'
       if (!uri) return
       let background = this.colourPalette.background
       if (!background) return
@@ -210,7 +206,7 @@ export default {
 
       let colorStr = textHex === '#000' ? 'black' : 'white'
 
-      return `${baseURL}${background}/${colorStr}/400/${uri}`
+      return `${baseURL}${background}/${colorStr}/450/${uri}`
     },
 
     /**
