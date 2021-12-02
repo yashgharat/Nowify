@@ -11,13 +11,13 @@
           class="now-playing__context has-context"
         >
           <b-row class="justify-content-md-center text-center">
-            <img :src="getContextObject().url" />
+            <img class="now-playing__code" :src="getContextObject().url" />
           </b-row>
           <b-row class="justify-content-md-center">
-            <h1
-              class="text-center"
+            <h3
+              class="now-playing__context-name text-center"
               v-text="getContextObject().contextName"
-            ></h1>
+            ></h3>
           </b-row>
         </div>
         <div v-else class="now-playing__context null-context">
@@ -238,7 +238,6 @@ export default {
 
         m = await response.json()
         this.currentPlaylist.name = m.name
-        console.log(m)
         return
       } catch (error) {
         this.handleExpiredToken()
